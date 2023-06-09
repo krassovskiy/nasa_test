@@ -2,27 +2,53 @@ class Calculate
   include Dry::Monads[:result, :do]
 
   def call(ship_weight:, flight_params:)
-    total_fuel = 0
+    weight_of_fuel = 0
 
-    flight_params.each do |param|
+    flight_params.reverse.each do |param|
       operation, gravity = param
 
+      fuel_for_ship = fuel_calculation(ship_weight + weight_of_fuel, gravity, operation)
+      fuel_for_fuel = fuel_for_ship
       sum_of_fuel = 0
-      mass = ship_weight
 
-      while true do
-        uncalculated_fuel = fuel_calculation(mass, gravity, operation)
-        sum_of_fuel += uncalculated_fuel
+      mass = fuel_for_fuel
+
+      while true do 
+        uncalculated_fuel = fuel_calculation(mass, gravity, operation)        
         mass = uncalculated_fuel
         if uncalculated_fuel <= 0
           break
         end
+        sum_of_fuel += uncalculated_fuel        
       end
-
-      total_fuel += sum_of_fuel
+      
+      weight_of_fuel += fuel_for_ship + sum_of_fuel
     end
 
-    return total_fuel + ship_weight
+    return weight_of_fuel
+
+    
+    # total_fuel = 0
+
+    # flight_params.reverse.each do |param|
+    #   operation, gravity = param
+
+    #   sum_of_fuel = 0
+    #   mass = ship_weight
+
+    #   while true do
+    #     uncalculated_fuel = fuel_calculation(mass, gravity, operation)
+    #     sum_of_fuel += uncalculated_fuel        
+    #     mass = uncalculated_fuel        
+    #     if uncalculated_fuel <= 0
+    #       break
+    #     end
+    #   end
+
+    #   total_fuel += sum_of_fuel
+    # end
+
+    # return total_fuel
   end
 
   private

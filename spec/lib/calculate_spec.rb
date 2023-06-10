@@ -56,4 +56,22 @@ RSpec.describe App['calculate'].class do
       end
     end
   end
+
+  context 'incorrect params for mission' do
+    describe '#call' do
+      before do
+        @ship_weight = '124124'
+        @flight_params = []
+        @calculate = App['calculate']
+      end
+
+      it 'return message with incorrect params' do
+        expect(@calculate.call(ship_weight: @ship_weight, flight_params: @flight_params)[0]).to eq :incorrect_params        
+      end
+
+      it 'errors count must be qreater than 0' do
+        expect(@calculate.call(ship_weight: @ship_weight, flight_params: @flight_params)[1].count).to be > 0        
+      end
+    end
+  end
 end

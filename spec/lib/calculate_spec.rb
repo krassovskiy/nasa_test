@@ -1,5 +1,5 @@
 RSpec.describe App['calculate'].class do
-  describe '#fuel_calculation' do
+  describe '#calculate_fuel_for_maneuver' do
     before do
       @mass = 28801
       @gravity = 9.807
@@ -7,11 +7,11 @@ RSpec.describe App['calculate'].class do
     end
 
     it 'return rounded down number with land operation' do
-      expect(@calculate.send(:fuel_calculation, @mass, @gravity, :land)).to eq 9278
+      expect(@calculate.send(:calculate_fuel_for_maneuver, @mass, @gravity, :land)).to eq 9278
     end
 
     it 'return rounded down number with launch operation' do
-      expect(@calculate.send(:fuel_calculation, @mass, @gravity, :launch)).to eq 11829
+      expect(@calculate.send(:calculate_fuel_for_maneuver, @mass, @gravity, :launch)).to eq 11829
     end
   end
 

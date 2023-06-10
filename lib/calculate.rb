@@ -1,59 +1,37 @@
 class Calculate
-  include Dry::Monads[:result, :do]
-
   def call(ship_weight:, flight_params:)
-    weight_of_fuel = 0
+    total_weight_of_fuel = 0
 
     flight_params.reverse.each do |param|
       operation, gravity = param
-
-      fuel_for_ship = fuel_calculation(ship_weight + weight_of_fuel, gravity, operation)
-      fuel_for_fuel = fuel_for_ship
-      sum_of_fuel = 0
-
-      mass = fuel_for_fuel
-
-      while true do 
-        uncalculated_fuel = fuel_calculation(mass, gravity, operation)        
-        mass = uncalculated_fuel
-        if uncalculated_fuel <= 0
-          break
-        end
-        sum_of_fuel += uncalculated_fuel        
-      end
-      
-      weight_of_fuel += fuel_for_ship + sum_of_fuel
+      total_weight_of_fuel += calculate_fuel_needed_to_maneuver_with_additional_fuel(ship_weight, gravity, operation, total_weight_of_fuel)
     end
 
-    return weight_of_fuel
-
-    
-    # total_fuel = 0
-
-    # flight_params.reverse.each do |param|
-    #   operation, gravity = param
-
-    #   sum_of_fuel = 0
-    #   mass = ship_weight
-
-    #   while true do
-    #     uncalculated_fuel = fuel_calculation(mass, gravity, operation)
-    #     sum_of_fuel += uncalculated_fuel        
-    #     mass = uncalculated_fuel        
-    #     if uncalculated_fuel <= 0
-    #       break
-    #     end
-    #   end
-
-    #   total_fuel += sum_of_fuel
-    # end
-
-    # return total_fuel
+    return total_weight_of_fuel
   end
 
   private
 
-    def fuel_calculation(mass, gravity, operation)
+    def calculate_fuel_needed_to_maneuver_with_additional_fuel(ship_weight, gravity, operation, total_weight_of_fuel)
+      fuel_needed_to_ship = calculate_fuel_for_maneuver(ship_weight + total_weight_of_fuel, gravity, operation)
+      mass = fuel_needed_to_ship
+      calculated_fuel = 0
+
+      while true do
+        uncalculated_fuel = calculate_fuel_for_maneuver(mass, gravity, operation)
+        mass = uncalculated_fuel
+
+        if uncalculated_fuel <= 0
+          break
+        end
+
+        calculated_fuel += uncalculated_fuel
+      end
+
+      return calculated_fuel + fuel_needed_to_ship
+    end
+
+    def calculate_fuel_for_maneuver(mass, gravity, operation)
       send("#{operation.to_s}_formula", mass, gravity)
     end
 

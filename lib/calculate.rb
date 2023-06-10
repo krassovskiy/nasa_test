@@ -1,4 +1,6 @@
 class Calculate
+  include Dry::Monads[:result, :do]
+
   def call(ship_weight:, flight_params:)
     total_weight_of_fuel = 0
 

@@ -1,3 +1,6 @@
+```To calculate a mission you need to use Calculate#call method```
+
+
 # **Backend Test Task**
 Congratulations! You have received a contract from NASA for software application, which will
 help to calculate fuel required for the flight. The goal of this application is to calculate fuel to
